@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f7fb">
+  <meta name="description" content="簡單清爽的每日行程管理工具，在手機與電腦上規劃一天。">
+  <title>每日行程｜日常安排</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="主要導覽">
+      <a class="brand" href="#" aria-label="每日行程首頁">
+        <span class="brand-mark" aria-hidden="true">✦</span>
+        <span>每日行程</span>
+      </a>
+      <div class="side-label">工作區</div>
+      <nav class="nav-list">
+        <button class="nav-item active" type="button" data-view="today"><span class="nav-icon">▦</span>今日行程<span class="nav-count" id="sidebar-count">0</span></button>
+        <button class="nav-item" type="button" data-view="all"><span class="nav-icon">☷</span>所有行程</button>
+        <button class="nav-item" type="button" data-view="done"><span class="nav-icon">✓</span>已完成</button>
+      </nav>
+      <div class="sidebar-note"><span class="note-star">✦</span><p>把重要的事，安排進日常。</p><span>一步一步就很好。</span></div>
+      <div class="sidebar-footer"><span class="status-dot"></span>資料儲存在這台裝置</div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="mobile-brand"><span class="brand-mark" aria-hidden="true">✦</span>每日行程</div>
+        <div class="topbar-date" id="today-label"></div>
+        <button class="today-button" id="jump-today" type="button">回到今天</button>
+      </header>
+
+      <section class="page-heading">
+        <div>
+          <p class="eyebrow" id="greeting">好好安排，從容開始</p>
+          <h1 id="page-title">今天的行程</h1>
+          <p class="subtitle" id="page-subtitle">把想做的事一件件完成。</p>
+        </div>
+        <button class="primary-button" id="open-form" type="button"><span aria-hidden="true">＋</span>新增行程</button>
+      </section>
+
+      <section class="date-card" aria-label="選擇日期">
+        <button class="date-arrow" id="previous-day" type="button" aria-label="前一天">‹</button>
+        <div class="date-current"><span class="date-weekday" id="selected-weekday"></span><strong id="selected-date"></strong></div>
+        <button class="date-arrow" id="next-day" type="button" aria-label="後一天">›</button>
+        <div class="date-progress">
+          <div class="progress-copy"><span>今日進度</span><strong id="progress-label">0 / 0</strong></div>
+          <div class="progress-track"><span id="progress-bar"></span></div>
+        </div>
+      </section>
+
+      <section class="summary-grid" aria-label="行程摘要">
+        <article class="summary-card"><span class="summary-icon lavender">◷</span><div><span class="summary-caption">待完成</span><strong id="pending-count">0</strong></div></article>
+        <article class="summary-card"><span class="summary-icon mint">✓</span><div><span class="summary-caption">已完成</span><strong id="completed-count">0</strong></div></article>
+        <article class="summary-card"><span class="summary-icon peach">⚑</span><div><span class="summary-caption">高優先度</span><strong id="priority-count">0</strong></div></article>
+      </section>
+
+      <section class="schedule-section">
+        <div class="section-heading">
+          <div><h2 id="list-heading">行程清單</h2><span class="section-hint" id="list-hint">依時間排序</span></div>
+          <div class="filters" role="group" aria-label="篩選行程">
+            <button type="button" class="filter-button selected" data-filter="all">全部</button>
+            <button type="button" class="filter-button" data-filter="pending">待完成</button>
+            <button type="button" class="filter-button" data-filter="done">已完成</button>
+          </div>
+        </div>
+        <div class="task-list" id="task-list" aria-live="polite"></div>
+      </section>
+      <footer class="page-footer">你的行程只會儲存在目前的瀏覽器中。</footer>
+    </main>
+  </div>
+
+  <dialog class="task-dialog" id="task-dialog" aria-labelledby="form-title">
+    <form id="task-form" method="dialog">
+      <div class="dialog-heading"><div><span class="eyebrow">安排一件新事情</span><h2 id="form-title">新增行程</h2></div><button class="icon-button" id="close-form" type="button" aria-label="關閉">×</button></div>
+      <label class="field-label" for="task-title">行程名稱</label>
+      <input id="task-title" name="title" type="text" maxlength="100" placeholder="例如：準備週會簡報" required>
+      <div class="form-row">
+        <div class="field"><label class="field-label" for="task-time">時間</label><input id="task-time" name="time" type="time" value="09:00"></div>
+        <div class="field"><label class="field-label" for="task-category">分類</label><select id="task-category" name="category"><option>個人</option><option>工作</option><option>學習</option><option>生活</option></select></div>
+      </div>
+      <label class="field-label" for="task-priority">優先度</label>
+      <select id="task-priority" name="priority"><option value="normal">一般</option><option value="high">高</option><option value="low">低</option></select>
+      <label class="field-label" for="task-note">備註 <span class="optional">選填</span></label>
+      <textarea id="task-note" name="note" rows="3" maxlength="240" placeholder="補充行程細節…"></textarea>
+      <div class="dialog-actions"><button class="secondary-button" id="cancel-form" type="button">取消</button><button class="primary-button" type="submit">儲存行程</button></div>
+    </form>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
